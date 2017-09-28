@@ -61,7 +61,7 @@ function bundle() {
  */
 gulp.task('jekyll-build', function (done) {
   browserSync.notify(messages.jekyllBuild);
-  return cp.spawn( jekyll , ['build'], {stdio: 'inherit'})
+  return cp.spawn( jekyll , ['build'])
     .on('close', done);
 });
 
@@ -96,9 +96,9 @@ gulp.task('serve', ['sass', 'jekyll-build'], function() {
     }
   });
 
-  gulp.watch('./src/templates/**/*', ['jekyll-rebuild']);
+  //gulp.watch('./src/templates/**/*', ['jekyll-rebuild']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
 });
 
 // use gulp-sequence to finish building html, sass and js before first page load
-gulp.task('default', gulpSequence(['jekyll-build', 'sass', 'js'], 'serve'));
+gulp.task('default', gulpSequence(['sass', 'js'], 'serve'));
