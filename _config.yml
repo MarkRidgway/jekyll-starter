@@ -26,10 +26,8 @@ github_username:  jekyll
 source: "src/templates"
 destination: "build"
 
-
 # Build settings
 markdown: kramdown
-theme: minima
 plugins:
   - jekyll-feed
 
