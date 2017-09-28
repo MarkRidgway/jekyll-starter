@@ -6,7 +6,7 @@ var buffer       = require('vinyl-buffer');
 var gulp         = require('gulp');
 var gutil        = require('gulp-util');
 var gulpSequence = require('gulp-sequence');
-var processhtml  = require('gulp-minify-html');
+//var processhtml  = require('gulp-minify-html');
 var sass         = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
 var watch        = require('gulp-watch');
@@ -17,10 +17,16 @@ var sourcemaps   = require('gulp-sourcemaps');
 var concat       = require('gulp-concat');
 var babel        = require('gulp-babel');
 var prod         = gutil.env.prod;
+var cp           = require('child_process');
 
 var onError = function(err) {
   console.log(err.message);
   this.emit('end');
+};
+
+var jekyll   = process.platform === 'win32' ? 'jekyll.bat' : 'jekyll';
+var messages = {
+  jekyllBuild: '<span style="color: grey">Running:</span> $ jekyll build'
 };
 
 // bundling js with browserify and watchify
@@ -50,12 +56,20 @@ function bundle() {
     .pipe(browserSync.stream());
 }
 
-// html
-gulp.task('html', function() {
-  return gulp.src('./src/templates/**/*')
-    .pipe(processhtml())
-    .pipe(gulp.dest('build'))
-    .pipe(browserSync.stream());
+/**
+ * Build the Jekyll Site
+ */
+gulp.task('jekyll-build', function (done) {
+  browserSync.notify(messages.jekyllBuild);
+  return cp.spawn( jekyll , ['build'])
+    .on('close', done);
+});
+
+/**
+ * Rebuild Jekyll & do page reload
+ */
+gulp.task('jekyll-rebuild', ['jekyll-build'], function () {
+  browserSync.reload();
 });
 
 // sass
@@ -75,16 +89,16 @@ gulp.task('sass', function() {
 });
 
 // browser sync server for live reload
-gulp.task('serve', function() {
+gulp.task('serve', ['sass', 'jekyll-build'], function() {
   browserSync.init({
     server: {
       baseDir: './build'
     }
   });
 
-  gulp.watch('./src/templates/**/*', ['html']);
+  gulp.watch('./src/templates/**/*', ['jekyll-rebuild']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
 });
 
 // use gulp-sequence to finish building html, sass and js before first page load
-gulp.task('default', gulpSequence(['html', 'sass', 'js'], 'serve'));
+gulp.task('default', gulpSequence(['sass', 'js'], 'serve'));
