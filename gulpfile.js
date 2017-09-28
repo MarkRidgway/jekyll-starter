@@ -96,7 +96,7 @@ gulp.task('serve', ['sass', 'jekyll-build'], function() {
     }
   });
 
-  //gulp.watch('./src/templates/**/*', ['jekyll-rebuild']);
+  gulp.watch('./src/templates/**/*', ['jekyll-rebuild']);
   gulp.watch('./src/scss/**/*.scss', ['sass']);
 });
 

@@ -31,6 +31,12 @@ markdown: kramdown
 plugins:
   - jekyll-feed
 
+# Don't delete assets on clean
+keep_files: [
+  'stylesheets',
+  'js'
+]
+
 defaults:
   -
     scope:
