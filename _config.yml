@@ -23,8 +23,8 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
 github_username:  jekyll
-source: src/templates
-destination: build
+source: "src/templates"
+destination: "build"
 
 
 # Build settings
@@ -32,6 +32,13 @@ markdown: kramdown
 theme: minima
 plugins:
   - jekyll-feed
+
+defaults:
+  -
+    scope:
+      path: "" # an empty string here means all files in the project
+    values:
+      layout: "default"
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list
